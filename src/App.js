@@ -13,7 +13,15 @@ const App = () => {
 
   const handleLogin = (username, password) => {
     setUserData({ username, password });
-    setIsLoggedIn(true);
+    if(username != "" &&  password != ""){
+      console.log("Enter Into handleLogin IF")
+      setIsLoggedIn(true);
+    }else{
+      console.log("Enter Into handleLogin else")
+
+      setIsLoggedIn(false);
+    }
+    
   };
 
   const handleLogout = () => {
@@ -26,6 +34,7 @@ const App = () => {
 
   return (
     <div >
+ 
       <Routes>
         <Route path="/" element={isLoggedIn ? <Dashboard userData={userData} onLogout={handleLogout} /> : <LoginForm onLogin={handleLogin} />} />
         <Route path="/signOut" element={<Logout />} />
@@ -38,11 +47,21 @@ const App = () => {
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     onLogin(username, password);
+    console.log("username",username,"password",password)
   };
+  const handleUsernameChange = (e) => {
+    const { value } = e.target;
+    setUsername(value);
+};
+
+const handlePasswordChange = (e) => {
+    const { value } = e.target;
+    setPassword(value);
+};
 
   return (
     <div >
@@ -50,13 +69,19 @@ const LoginForm = ({ onLogin }) => {
       <form onSubmit={handleSubmit} className='formBody'>
         <div className='row'>
           <div className='col-lg-4 offset-4'>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="floating-input mb-3" placeholder="User Name" />
+            <input type="text" value={username} 
+        onChange={handleUsernameChange}
+        
+  className="floating-input mb-3" placeholder="User Name" />
           </div>
           <div className='col-lg-4 offset-4'>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="floating-input mb-3" placeholder="Password" />
+            <input type="password" value={password} 
+        
+        onChange={handlePasswordChange}
+    className="floating-input mb-3" placeholder="Password" />
           </div>
           <div className='col-lg-4 offset-4 text-center'>
-            <button type="submit" className="btn btn-raised btn-md btnSubmit">Submit</button>
+            <button type="submit" className="btn btn-raised btn-md btnSubmit" disabled={!username || !password}>Submit</button>
           </div>
         </div>
       </form>
